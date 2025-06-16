@@ -216,6 +216,7 @@ export const updateDocWithExtractedData = mutation({
                 quantity:v.number(),
                 unitPrice:v.number(),
                 totalPrice:v.number(),
+                vatAmount:v.number(),
             })
         ),
 

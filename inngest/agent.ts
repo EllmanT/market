@@ -45,9 +45,9 @@ export const extractAndSavePDF = inngest.createFunction(
     async({event})=>{
         const result = await agentNetwork.run(
             `Extract the key data from this pdf: ${event.data.url}, Once the data is extracted , save it to the database using the docId: ${event.data.docId}.
-             Once the receipt is successflly saved to the database you can terminate the agent process.`
+             Once the document is successflly saved to the database you can terminate the agent process.`
         )
-        return result.state.kv.get("receipt")
+        return result.state.kv.get("doc")
     }
 
 )
