@@ -73,7 +73,7 @@ function DocList() {
                         <TableRow
                         key={doc._id}
                         className='cursor-pointer hover:bg-gray-50'
-                        onClick={()=>(router.push(`/doc/${doc._id}`))}
+                        onClick={()=>(router.push(`/docs/doc/${doc._id}`))}
                         >
                             <TableCell className='py-2'>
                                 <FileText className='h-5 w-5 text-red-500'/>

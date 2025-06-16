@@ -31,13 +31,33 @@ export const storeDoc = mutation({
             status:"pending",
 
             // Initialize extracted data fields as null
-            merchantName:undefined,
-            merchantAddress:undefined,
-            merchantContact:undefined,
-            transactionDate:undefined,
-            transactionAmount:undefined,
+            sellerName:"",
+            sellerTIN:undefined,
+            sellerVAT:undefined,
+            sellerAddress:undefined,
+            sellerContact:undefined,
+
+            customerName:undefined,
+            customerTIN:undefined,
+            customerVAT:undefined,
+            customerAddress:undefined,
+            customerContact:undefined,
+
+            docType:"",
             currency:undefined,
-            items:[]
+            pricingType:undefined,            
+            docSummary:undefined,
+
+            docNumber:undefined,
+            transactionDate:undefined,
+            transactionTotalVat:undefined,
+            transactionSubTotal:undefined,
+            transactionTotalAmount:undefined,
+            
+
+            items:[],
+
+           bankingDetails:[]
     
         })
         return docId
@@ -164,19 +184,47 @@ export const updateDocWithExtractedData = mutation({
     args:{
         id:v.id("docs"),
         fileDisplayName:v.string(),
-        merchantName:v.string(),
-        merchantAddress:v.string(),
-        merchantContact:v.string(),
-        transactionDate:v.string(),
-        transactionAmount:v.string(),
+
+        sellerName:v.string(),
+        sellerTIN:v.string(),
+        sellerVAT:v.string(),
+        sellerAddress:v.string(),
+        sellerContact:v.string(),
+        sellerEmail:v.string(),
+
+        customerName:v.string(),
+        customerTIN:v.string(),
+        customerVAT:v.string(),
+        customerAddress:v.string(),
+        customerContact:v.string(),
+        customerEmail:v.string(),
+
+        docType:v.string(),
         currency:v.string(),
+        pricingType:v.string(),
         docSummary:v.string(),
+
+        docNumber:v.string(),
+        transactionDate:v.string(),
+        transactionTotalVat:v.string(),
+        transactionSubTotal:v.string(),
+        transactionTotalAmount:v.string(),
+        
         items:v.array(
             v.object({
                 name:v.string(),
                 quantity:v.number(),
                 unitPrice:v.number(),
                 totalPrice:v.number(),
+            })
+        ),
+
+         bankingDetails:v.array(
+            v.object({
+                bankName:v.string(),
+                branchName:v.string(),
+                accountNumber:v.string(),
+                accountCurrency:v.string(),
             })
         )
     },
@@ -190,14 +238,35 @@ export const updateDocWithExtractedData = mutation({
         // Update the doc with the extracted data
         await ctx.db.patch(args.id,{
             fileDisplayName:args.fileDisplayName,
-            merchantName:args.merchantName,
-            merchantAddress:args.merchantAddress,
-            merchantContact:args.merchantAddress,
-            transactionDate:args.transactionDate,
-            transactionAmount:args.transactionAmount,
+            sellerName:args.sellerName,
+            sellerTIN:args.sellerTIN,
+            sellerVAT:args.sellerVAT,
+            sellerAddress:args.sellerAddress,
+            sellerContact:args.sellerContact,
+            sellerEmail:args.sellerEmail,
+
+
+            customerName:args.customerName,
+            customerTIN:args.customerTIN,
+            customerVAT:args.customerVAT,
+            customerAddress:args.customerAddress,
+            customerContact:args.customerContact,
+            customerEmail:args.customerEmail,
+
+            docType:args.docType,
             currency:args.currency,
+            pricingType:args.pricingType,
             docSummary:args.docSummary,
+
+            docNumber:args.docNumber,
+            transactionDate:args.transactionDate,
+            transactionTotalVat:args.transactionTotalVat,
+            transactionSubTotal:args.transactionSubTotal,
+            transactionTotalAmount:args.transactionTotalAmount,
+            
             items:args.items,
+
+            bankingDetails:args.bankingDetails,
             status:"processed"
         })
         return {
