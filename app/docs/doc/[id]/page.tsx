@@ -192,34 +192,58 @@ function Page() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Informatino */}
 
-                                <div className="space-y-4">
-                                    <div>
-                                        <h3 className="text-sm font-medium text-gray-500">
-                                            File Information 
-                                        </h3>
+                                <div className="space-y-4 text-sm">
+                                    <h3 className="text-md font-semibold mb-4"> Seller Details</h3>
 
-                                        <div className="mt-2 bg-gray-50 p-4 rounded-lg">
-                                        <div className="grid grid-cols-2 gap-4 text-sm">
-                                            <div>
-                                                <p className="text-gray-500">Uploaded</p>
-                                                <p className="font-medium">{uploadDate}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-gray-500">Size</p>
-                                                <p className="font-medium">{formatFileSize(doc.size)}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-gray-500">Type</p>
-                                                <p className="font-medium">{doc.mimeType}</p>
-                                            </div>
-                                            <div>
-                                            <p className="text-gray-500">ID</p>
-                                                <p className="font-medium truncate" title={doc._id}>{doc._id.slice(0,10)}...</p>
+                                  {/* File info  */}
+                                                                          {
+                                            doc.sellerName && (
+                                                <div className="flex space-x-7 ">
+                                                    <p className=" text-gray-500">Name</p>
+                                                    <p className="font-medium">  {doc.sellerName}</p>
+                                                </div>
+                                            )
+                                        }
+                                          {
+                                            doc.sellerAddress && (
+                                                <div className="flex space-x-4">
+                                                    <p className=" text-gray-500">Address</p>
+                                                    <p className="font-medium ">{doc.sellerAddress}</p>
+                                                </div>
+                                            )
+                                        }
 
-                                            </div>
-                                        </div>
-                                        </div>
-                                    </div>
+                                            {
+                                            doc.sellerContact && (
+                                                <div className="flex space-x-10">
+                                                    <div className="flex space-x-5">
+                                                    <p className=" text-gray-500">Contact</p>
+                                                    <p className="font-medium">{doc.sellerContact}</p>
+                                                </div>
+                                                  <div className="flex space-x-5">
+                                                    <p className=" text-gray-500">Email</p>
+                                                    <p className="font-medium">{doc.sellerEmail}</p>
+                                                </div>
+                                                </div>
+                                              
+                                            )
+                                        }
+                                         {
+                                            doc.sellerTIN && (
+                                                <div className="flex space-x-7">
+                                                    <div className="flex space-x-5">
+                                                    <p className=" text-gray-500">TIN No</p>
+                                                    <p className="font-medium">  {doc.sellerTIN}</p>
+                                                </div>
+                                                <div className="flex space-x-5">
+                                                    <p className=" text-gray-500">VAT No</p>
+                                                    <p className="font-medium">  {doc.sellerVAT}</p>
+                                                </div>
+                                                </div>
+                                                
+                                            )
+                                        }
+                                         
                                 </div>
 
                                 {/* Download */}
@@ -251,59 +275,169 @@ function Page() {
                         hasExtractedData && (
 
                             <div className="mt-8">
-                                <h3 className="text-lg font-semibold mb-4"> Doc Details</h3>
+                                <h3 className="text-lg font-semibold mb-4"> Buyer Details</h3>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                                     {/* Merchant Details */}
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 text-sm">
                                         {
-                                            doc.merchantName && (
-                                                <div>
+                                            doc.customerName && (
+                                                <div className="flex space-x-7">
                                                     <p className="text-sm text-gray-500">Name</p>
-                                                    <p className="font-medium">{doc.merchantName}</p>
+                                                    <p className="font-medium">  {doc.customerName}</p>
                                                 </div>
                                             )
                                         }
                                           {
-                                            doc.merchantAddress && (
-                                                <div>
-                                                    <p className="text-sm text-gray-500">Address</p>
-                                                    <p className="font-medium">{doc.merchantAddress}</p>
+                                            doc.customerAddress && (
+                                                <div className="flex space-x-4">
+                                                    <p className=" text-gray-500">Address</p>
+                                                    <p className="font-medium ">{doc.customerAddress}</p>
                                                 </div>
                                             )
                                         }
 
-{
-                                            doc.merchantContact && (
-                                                <div>
+                                            {
+                                            doc.customerContact && (
+                                                <div className="flex space-x-10">
+                                                    <div className="flex space-x-5">
                                                     <p className="text-sm text-gray-500">Contact</p>
-                                                    <p className="font-medium">{doc.merchantContact}</p>
+                                                    <p className="font-medium">{doc.customerContact}</p>
                                                 </div>
+                                                  <div className="flex space-x-5">
+                                                    <p className="text-sm text-gray-500">Email</p>
+                                                    <p className="font-medium">{doc.customerEmail}</p>
+                                                </div>
+                                                </div>
+                                              
                                             )
                                         }
+                                         {
+                                            doc.customerTIN && (
+                                                <div className="flex space-x-7">
+                                                    <div className="flex space-x-5">
+                                                    <p className="text-sm text-gray-500">TIN No</p>
+                                                    <p className="font-medium">  {doc.customerTIN}</p>
+                                                </div>
+                                                <div className="flex space-x-5">
+                                                    <p className="text-sm text-gray-500">VAT No</p>
+                                                    <p className="font-medium">  {doc.customerVAT}</p>
+                                                </div>
+                                                </div>
+                                                
+                                            )
+                                        }
+                                         
                                         </div>
                                     {/* Transaction details */}
                                             <div className="bg-gray-50 p-4 rounded-lg">
                                                 <h4 className="font-medium text-gray-700 mb-3">Transaction Details</h4>
                                                 
-                                                <div className="space-y-2">
-                                                    {doc.transactionDate&&(
-                                                        <div>
-                                                    <p className="text-sm text-gray-500">Date</p>
+                                                <div className="space-y-2 text-sm">
+                                                    {doc.docType&&(
+                                                        <div className="flex space-x-8">
+                                                    <div className="flex space-x-2">
+                                                    <p className=" text-gray-500">Doc Type</p>
+                                                    <p className="font-medium">{doc.docType}</p>
+                                                            </div>
+                                                    <div className="flex space-x-2">
+                                                    <p className=" text-gray-500">Date</p>
                                                     <p className="font-medium">{doc.transactionDate}</p>
                                                             </div>
+                                                        </div>
+                                                        
                                                     )}
-                                                      {doc.transactionAmount&&(
-                                                        <div>
-                                                    <p className="text-sm text-gray-500">Amount</p>
-                                                    <p className="font-medium">{doc.transactionAmount} {doc.currency ||""}</p>
+                                                      {doc.currency&&(
+                                                        <div className="flex space-x-20">
+                                                    <div className="flex space-x-2">
+                                                    <p className=" text-gray-500">Currency</p>
+                                                    <p className="font-medium">{doc.currency}</p>
                                                             </div>
+                                                    <div className="flex space-x-2">
+                                                    <p className=" text-gray-500">Invoice No</p>
+                                                    <p className="font-medium">{doc.docNumber}</p>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    )}
+                                                  {doc.currency&&(
+                                                        <div className="flex space-x-20">
+                                                    <div className="flex space-x-5">
+                                                    <p className=" text-gray-500">Pricing</p>
+                                                    <p className="font-medium">{doc.pricingType}</p>
+                                                            </div>
+                                                   
+                                                        </div>
+                                                        
                                                     )}
                                                     </div>
                                                 </div>
 
                                 </div>
+
+                    {/* Items Section */}
+                    {
+                        doc.items&& doc.items.length>0&&(
+                            <div className="mt-6">
+                                <h4 className="font-medium text-gray-700 mb-3">Items ({doc.items.length})</h4>
+                                
+                                <div className="overflow-x-auto">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Item</TableHead>
+                                                <TableHead>Quantity</TableHead>
+                                                <TableHead>Unit Price</TableHead>
+                                                <TableHead>Vat</TableHead>
+
+                                                <TableHead>Total</TableHead>
+                                                </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {
+                                                doc.items.map((item,index)=>(
+                                                    <TableRow key={index}>
+                                                        <TableCell className="font-medium"> {item.name}</TableCell>
+                                                        <TableCell> {item.quantity}</TableCell>
+                                                        <TableCell> {item.vatAmount}</TableCell>
+                                                        <TableCell> {formatCurrency(item.unitPrice,doc.currency)}</TableCell>
+                                                        <TableCell> {formatCurrency(item.totalPrice,doc.currency)}</TableCell>
+
+                                                    </TableRow>
+                                                ))
+                                            }
+                                        </TableBody>
+                                        <TableFooter>
+                                            <TableRow className="font-sans font-medium">
+                                                <TableCell colSpan={4} className="text-right">Sub Total</TableCell>
+                                            <TableCell className="">
+                                                {doc.transactionSubTotal}
+                                            </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell colSpan={4} className="text-right font-sans font-light">VAT Total</TableCell>
+                                            <TableCell className="font-sans font-light">
+                                                {doc.transactionTotalVat} 
+                                             
+                                            </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell colSpan={4} className="text-right">Invoice Total</TableCell>
+                                            <TableCell className="font-medium">
+                                                {doc.transactionTotalAmount} {doc.currency}
+                                             
+                                            </TableCell>
+                                            </TableRow>
+                                        </TableFooter>
+                                    </Table>
+                                    </div>
+                                </div>
+                        )
+                    }
+
+
+
                                             {/* doc Summary */}
 
                                             {doc.docSummary &&(
@@ -379,52 +513,6 @@ function Page() {
                                             )}
 
                             </div>
-                        )
-                    }
-                    {/* Items Section */}
-                    {
-                        doc.items&& doc.items.length>0&&(
-                            <div className="mt-6">
-                                <h4 className="font-medium text-gray-700 mb-3">Items ({doc.items.length})</h4>
-                                
-                                <div className="overflow-x-auto">
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow>
-                                                <TableHead>Item</TableHead>
-                                                <TableHead>Quantity</TableHead>
-                                                <TableHead>Unit Price</TableHead>
-                                                <TableHead>Total</TableHead>
-                                                </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {
-                                                doc.items.map((item,index)=>(
-                                                    <TableRow key={index}>
-                                                        <TableCell className="font-medium"> {item.name}</TableCell>
-                                                        <TableCell> {item.quantity}</TableCell>
-                                                        <TableCell> {formatCurrency(item.unitPrice,doc.currency)}</TableCell>
-                                                        <TableCell> {formatCurrency(item.totalPrice,doc.currency)}</TableCell>
-
-                                                    </TableRow>
-                                                ))
-                                            }
-                                        </TableBody>
-                                        <TableFooter>
-                                            <TableRow>
-                                                <TableCell colSpan={3} className="text-right">Total</TableCell>
-                                            <TableCell className="font-medium">
-                                                {
-                                                    formatCurrency(
-                                                        doc.items.reduce((sum,item)=>sum+item.totalPrice, 0), doc.currency
-                                                    )
-                                                }
-                                            </TableCell>
-                                            </TableRow>
-                                        </TableFooter>
-                                    </Table>
-                                    </div>
-                                </div>
                         )
                     }
                 <div className="mt-8 border-t  pt-6">
