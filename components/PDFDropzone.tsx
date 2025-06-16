@@ -11,7 +11,6 @@ import { useSchematicEntitlement } from '@schematichq/schematic-react';
 // import { uploadPDF } from '@/actions/uploadPDF';
 import { AlertCircle, CheckCircle, CloudUpload } from 'lucide-react';
 import { Button } from './ui/button';
-import { uploadPDF } from '@/lib/actions/doc.action';
 
 function PDFDropzone() {
 
