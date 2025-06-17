@@ -7,7 +7,7 @@ import { deleteDoc } from "@/lib/actions/doc.action";
 import { getFileDownloadUrl } from "@/lib/getFileDownloadUrl";
 import { useSchematicFlag } from "@schematichq/schematic-react";
 import { useQuery } from "convex/react";
-import { ChevronLeft, FileText, Lightbulb, Lock, Sparkles } from "lucide-react";
+import { BanknoteArrowUp, BanknoteArrowUpIcon, BanknoteXIcon, ChevronLeft, FileText, Lightbulb, Lock, PiggyBankIcon, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react";
@@ -140,15 +140,13 @@ function Page() {
         </div>
     )}
 
-    //Format upload date 
-    const uploadDate = new Date(doc.uploadedAt).toLocaleString();
 
     // Check if doc has extracted data
     const hasExtractedData =!!(
-        doc.merchantName||
-        doc.merchantAddress||
+        doc.sellerName||
+        doc.sellerAddress||
         doc.transactionDate||
-        doc.transactionAmount
+        doc.transactionTotalAmount
     )
   return (
     <div
@@ -265,6 +263,7 @@ function Page() {
                                                 </a>
                                             )
                                         }
+                                        
                                     </div>
 
                                 </div>
@@ -436,10 +435,95 @@ function Page() {
                         )
                     }
 
+                                        <div className=" grid grid-cols-1 md:grid-cols-2 w-full gap-4">
+                                             {/* Banking Details */}
+                                           
+                                            {doc.bankingDetails &&(
+                                                <>                                              
+                                                                                        {
+                                                                                                doc.bankingDetails.map((item,index)=>(
+                                                                                                    <>
+                                                                                                      <div className="mt-6 bg-gray-100 p-6 rounded-lg border border-gray-200 shadow-sm" key={index}>
+                                                        <div className="flex items-center justify-between mb-4">
+                                                            <div className="flex items-center">
+                                                                <h4 className="font-semibold text-gray-500">Banking Details</h4>
+                                                            <div className="ml-2 flex">
+                                                            <BanknoteArrowUpIcon className="h-3.5 w-3.5 text-gray-500"/>
+                                                        <BanknoteArrowUpIcon className="h-3 w-3 text-gray-400 -ml-1"/>
+ 
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="grid grid-cols-2 w-full gap-2">
+                                                        <div className="bg-white bg-opacity-50 rounded-lg p-4 border border-gray-200 flex flex-col text-sm text-gray-500">
+                                                            
+                                                              
+                                                                <p>Bank Name</p>
+                                                                <p>Branch Name</p>
+                                                                <p>Account Number</p>
+                                                                <p>Currency</p>
 
+                                                                 
+                                                          
+
+                                                        </div>
+                                                        <div className="bg-white bg-opacity-50 rounded-lg p-4 border border-gray-200 flex flex-col text-sm text-gray-500">
+                                                            
+                                                              
+                                                                <p>{item?.bankName}</p>
+                                                                <p>{item?.branchName}</p>
+                                                                <p>{item?.accountNumber}</p>
+                                                                <p>{item?.accountCurrency}</p>
+
+                                                                 
+                                                          
+
+                                                        </div>
+                                                        </div>
+                                                     
+                                                        <div className="mt-3 text-sm text-gray-400 italic flex items-center">
+                                                            <Lightbulb className="h-3 w-3 mr-1"/>
+                                                                <span>
+                                                                    Get paid easily 
+                                                                </span>
+                                                        </div>
+
+                                                        {/* footer */}
+                                                                        <div className="mt-2 border-t">
+                    <h3 className="text-sm font-medium text-gray-500 mb-4">Actions</h3>
+                        <div className="flex flex-wrap gap-3">
+                            <button className={`px-4 py-2 bg-white border border-gray-300 rounded text-sm text-gray-700 ${isLoadingDownload?"opacity-50 cursor-not-allowed":"hover:bg-gray-50"}`}
+                            onClick={handleDownload}
+                            disabled={isLoadingDownload || !fileId}
+                            >
+                            {isLoadingDownload ? "Downloading...":"Download PDF"}
+                            </button>
+                            <button
+                            className={`px-4 py-2 rounded text-sm ${
+                                isDeleting ?"bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed":
+                                "bg-red-50 border border-red-200 text-red-600 hover:bg-red-100"
+                            }`}
+                            onClick={handleDeleteDoc}
+                            disabled={isDeleting}
+                            >
+                                {isDeleting ?"Deleting":"Delete Document"}
+                            </button>
+                        </div>
+                </div>
+
+
+                                                    </div>
+                                                                                                    </>
+                                                                                                ))
+                                                                                            }
+
+                                                  
+                                               
+                                                </>
+                                            )}
 
                                             {/* doc Summary */}
-
+                                           
                                             {doc.docSummary &&(
                                                 <>
                                                 {isSummariesEnabled ?(
@@ -511,31 +595,11 @@ function Page() {
                                                 )}
                                                 </>
                                             )}
+                                            </div>
 
                             </div>
                         )
                     }
-                <div className="mt-8 border-t  pt-6">
-                    <h3 className="text-sm font-medium text-gray-500 mb-4">Actions</h3>
-                        <div className="flex flex-wrap gap-3">
-                            <button className={`px-4 py-2 bg-white border border-gray-300 rounded text-sm text-gray-700 ${isLoadingDownload?"opacity-50 cursor-not-allowed":"hover:bg-gray-50"}`}
-                            onClick={handleDownload}
-                            disabled={isLoadingDownload || !fileId}
-                            >
-                            {isLoadingDownload ? "Downloading...":"Download PDF"}
-                            </button>
-                            <button
-                            className={`px-4 py-2 rounded text-sm ${
-                                isDeleting ?"bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed":
-                                "bg-red-50 border border-red-200 text-red-600 hover:bg-red-100"
-                            }`}
-                            onClick={handleDeleteDoc}
-                            disabled={isDeleting}
-                            >
-                                {isDeleting ?"Deleting":"Delete Doc"}
-                            </button>
-                        </div>
-                </div>
                     {/* End of section  */}
 
                 </div>
