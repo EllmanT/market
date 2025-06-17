@@ -438,12 +438,11 @@ function Page() {
                                         <div className=" grid grid-cols-1 md:grid-cols-2 w-full gap-4">
                                              {/* Banking Details */}
                                            
-                                            {doc.bankingDetails &&(
-                                                <>                                              
-                                                                                        {
-                                                                                                doc.bankingDetails.map((item,index)=>(
+                                           
+                                                                                        
+                                                                                       
                                                                                                     <>
-                                                                                                      <div className="mt-6 bg-gray-100 p-6 rounded-lg border border-gray-200 shadow-sm" key={index}>
+                                                                                                      <div className="mt-6 bg-gray-100 p-6 rounded-lg border border-gray-200 shadow-sm" >
                                                         <div className="flex items-center justify-between mb-4">
                                                             <div className="flex items-center">
                                                                 <h4 className="font-semibold text-gray-500">Banking Details</h4>
@@ -454,7 +453,9 @@ function Page() {
                                                             </div>
                                                             </div>
                                                         </div>
-                                                        <div className="grid grid-cols-2 w-full gap-2">
+                                                         {
+                                                                                                doc.bankingDetails.map((item,index)=>(
+                                                        <div className="grid grid-cols-2 w-full gap-2" key={index}>
                                                         <div className="bg-white bg-opacity-50 rounded-lg p-4 border border-gray-200 flex flex-col text-sm text-gray-500">
                                                             
                                                               
@@ -480,7 +481,8 @@ function Page() {
 
                                                         </div>
                                                         </div>
-                                                     
+                                                       ))
+                                                                                            }
                                                         <div className="mt-3 text-sm text-gray-400 italic flex items-center">
                                                             <Lightbulb className="h-3 w-3 mr-1"/>
                                                                 <span>
@@ -514,13 +516,12 @@ function Page() {
 
                                                     </div>
                                                                                                     </>
-                                                                                                ))
-                                                                                            }
+                                                                                              
 
                                                   
                                                
-                                                </>
-                                            )}
+                                              
+                                          
 
                                             {/* doc Summary */}
                                            
