@@ -1,5 +1,6 @@
 import { v } from "convex/values"
 import {mutation, query} from "./_generated/server"
+import { paginationOptsValidator } from "convex/server";
 export const generateUploadUrl = mutation({
     args:{},
     handler: async(ctx)=>{
@@ -70,15 +71,19 @@ export const storeDoc = mutation({
 export const getDocs = query({
     args:{
         userId:v.string(),
+         paginationOpts: paginationOptsValidator,
     },
     handler: async(ctx, args)=>{
         // Get the docs
     //   Only return the docs for the authenticated user
-    return await ctx.db
+ const results= await ctx.db
     .query("docs")
     .filter((q)=>q.eq(q.field("userId"), args.userId))
     .order("desc")
-    .collect()
+    .paginate(args.paginationOpts)
+
+    console.log("results ", results)
+        return results;
     }
 })
 

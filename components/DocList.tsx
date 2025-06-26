@@ -1,21 +1,29 @@
 "use client"
 import { api } from '@/convex/_generated/api';
 import { useUser } from '@clerk/nextjs'
-import { useQuery } from 'convex/react';
+import { usePaginatedQuery } from 'convex/react';
 import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Doc } from '@/convex/_generated/dataModel';
 import { useRouter } from 'next/navigation';
 import { ChevronRight, FileText } from 'lucide-react';
+import { Button } from './ui/button';
+
 
 function DocList() {
     const router = useRouter();
 
     const {user} = useUser();
     
-    const docs = useQuery(api.docs.getDocs,{
-        userId:user?.id|| "",
-    })
+    const {results,status, loadMore } = usePaginatedQuery(
+        api.docs.getDocs,
+        {        userId:user?.id|| ""},
+         { initialNumItems: 25 },
+    
+    )
+
+        const docs = results
+
 
     if(!user){
         return (
@@ -54,7 +62,7 @@ function DocList() {
   return (
     <div className='w-full'>
 
-        <h2 className='text-xl font-smibold mb-4'>Your Docs</h2>
+        <h2 className='text-xl font-semibold mb-4'>Your Docs</h2>
         <div className='bg-white border border-gray-200 rounded-lg overflow-hidden'>
             <Table>
                 <TableHeader>
@@ -62,7 +70,7 @@ function DocList() {
                         <TableHead className='w-[40px]'>
 
                         </TableHead>
-                        <TableHead>Name</TableHead>
+                        <TableHead >Name</TableHead>
                         <TableHead>Uploaded</TableHead>
                         {/* <TableHead>Size</TableHead> */}
                         <TableHead>Total</TableHead>
@@ -74,7 +82,7 @@ function DocList() {
                     {docs.map((doc: Doc<"docs">)=>(
                         <TableRow
                         key={doc._id}
-                        className='cursor-pointer hover:bg-gray-50'
+                        className='cursor-pointer hover:bg-gray-100'
                         onClick={()=>(router.push(`/docs/doc/${doc._id}`))}
                         >
                             <TableCell className='py-2'>
@@ -89,9 +97,7 @@ function DocList() {
   month: 'short', // or 'long' or '2-digit'
   year: 'numeric'
 })}                                </TableCell>
-                                {/* <TableCell>
-                                    {formatFileSize(doc.size)}
-                                </TableCell> */}
+                              
                                 <TableCell>
                                     {doc.transactionTotalAmount ? `${doc.transactionTotalAmount} ${doc.currency ||""}`:"-"}
                                 </TableCell>
@@ -109,7 +115,23 @@ function DocList() {
                         </TableRow>
                     ))}
                 </TableBody>
+               
+
             </Table>
+            <div className='flex items-center space-x-2 p-2'>
+                
+               <Button variant="outline" className=' font-bold bg-blue-500 ' onClick={() => loadMore(5)} disabled={status !== "CanLoadMore"}>
+        Prev
+      </Button>
+       <Button variant="outline" className=' font-bold ' onClick={() => loadMore(5)} disabled={status !== "CanLoadMore"}>
+        1
+      </Button> 
+       <Button variant="outline" className=' font-bold bg-blue-500 ' onClick={() => loadMore(5)} disabled={status !== "CanLoadMore"}>
+        Next
+      </Button> 
+            </div>
+                                                {/* <Pagination loadMore={loadMore} /> */}
+
         </div>
     </div>
   )
@@ -118,14 +140,3 @@ function DocList() {
 export default DocList
 
 
-// Helper for the formatting of the size
-
-function formatFileSize(bytes:number):string{
-    if(bytes ===0) return "0 bytes";
-    const k =1024;
-
-    const size =["Bytes", "KB", "MB", "GB"];
-
-    const i = Math.floor(Math.log(bytes)/Math.log(k));
-    return parseFloat((bytes/Math.pow(k,i)).toFixed(2))+""+ size[i]
-}

@@ -4,10 +4,10 @@ import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, Table
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { deleteDoc } from "@/lib/actions/doc.action";
-import { getFileDownloadUrl } from "@/lib/getFileDownloadUrl";
+import { getFileDownloadUrl } from "@/lib/get-file-download-url";
 import { useSchematicFlag } from "@schematichq/schematic-react";
 import { useQuery } from "convex/react";
-import { BanknoteArrowUp, BanknoteArrowUpIcon, BanknoteXIcon, ChevronLeft, FileText, Lightbulb, Lock, PiggyBankIcon, Sparkles } from "lucide-react";
+import {BanknoteArrowUpIcon,  ChevronLeft, FileText, Lightbulb, Lock, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react";
@@ -613,19 +613,6 @@ function Page() {
 
 export default Page
 
-// Helper function to foormat the file size 
-
-function formatFileSize(bytes:number):string{
-   if(bytes ===0) return "0 Bytes";
-   
-   const k = 1024;
-   const sizes = ["Bytes","KB","MB","GB"];
-
-   const i = Math.floor(Math.log(bytes)/Math.log(k));
-
-   return parseFloat((bytes/Math.pow(k,i)).toFixed(2))+" " + sizes[i];
-
-}
 
 //    Helper function to format currency
 

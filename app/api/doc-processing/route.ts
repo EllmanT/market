@@ -1,10 +1,10 @@
 import { api } from "@/convex/_generated/api";
 import { inngest } from "@/inngest/client";
-import convex from "@/lib/convexClient";
+import convex from "@/lib/convex-client";
 import Events from "@/constants/constants";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { getFileDownloadUrl } from "@/lib/getFileDownloadUrl";
+import { getFileDownloadUrl } from "@/lib/get-file-download-url";
 
 export async function POST(req: Request) {
   const { userId } =  await auth();

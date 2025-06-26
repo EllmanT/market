@@ -1,6 +1,6 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import convex from "./convexClient";
+import convex from "./convex-client";
 
 
 export async function getFileDownloadUrl(fileId:Id<"_storage">| string){
