@@ -157,7 +157,8 @@ export const docScanningAgent = createAgent({
     - Itemised Purchases: Product names , quantities, individual prices, individual vat totals, individual discounts and line item totals
     - Total Amounts: Subtotal for the document, Total for ducument, vat total paid and any applied discounts
     
-    - Pricing Type: Use the subtotal, vat total , and document total as well as the total amounts for the line items, to determine the pricing type of the document. 
+    - Pricing Type: Use the subtotal, vat total , and document total as well as the total amounts for the line items, to determine the pricing type of the document.
+     Key tip, If the totals for the line items is the same as the document total then the pricing is tax inclusive otherwise it is tax exclusive
     - Whether it is tax exclusive or tax inclusive
 
     - Banking Details: Check the document to find any bankding details provided. Store things like 
