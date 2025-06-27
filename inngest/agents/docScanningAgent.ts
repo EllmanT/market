@@ -67,7 +67,7 @@ const parsePDFTool = createTool({
                                         "transaction_date":"YYY-MM-DD",
                                         "doc_type":"Fiscal Tax Invoice",
                                         "doc_number":"ABC12332",
-                                        "pricing_type":"tax_inclusive",
+                                        "pricing_type":"tax_inclusive /tax_exclusive",
                                         },
                                     "items":[
                                             {
@@ -157,7 +157,7 @@ export const docScanningAgent = createAgent({
     - Itemised Purchases: Product names , quantities, individual prices, individual vat totals, individual discounts and line item totals
     - Total Amounts: Subtotal for the document, Total for ducument, vat total paid and any applied discounts
     
-    - Pricing Type: Use the subtotal, vat total , and document total as well as the total amounts for the line items, determine the pricing type of the document. 
+    - Pricing Type: Use the subtotal, vat total , and document total as well as the total amounts for the line items, to determine the pricing type of the document. 
     - Whether it is tax exclusive or tax inclusive
 
     - Banking Details: Check the document to find any bankding details provided. Store things like 
