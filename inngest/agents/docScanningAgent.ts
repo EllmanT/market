@@ -1,3 +1,6 @@
+import { api } from "@/convex/_generated/api";
+import { Id } from "@/convex/_generated/dataModel";
+import convex from "@/lib/convex-client";
 import { createAgent, createTool, openai } from "@inngest/agent-kit";
 import { anthropic } from "inngest";
 import { z } from "zod";
@@ -6,12 +9,13 @@ const parsePDFTool = createTool({
     name:"parse-pdf",
     description:"Analyse the given PDF",
     parameters:z.object({
-        pdfUrl:z.string()
+        pdfUrl:z.string(),
+        docId:z.string()
     }),
 
-    handler: async ({pdfUrl}, {step})=>{
+    handler: async ({pdfUrl, docId}, {step, network})=>{
         try {
-            return await step?.ai.infer("parse-pdf",{
+            const result= await step?.ai.infer("parse-pdf",{
                 model:anthropic({
                     model:"claude-3-5-sonnet-20241022",
                     defaultParameters:{
@@ -32,7 +36,15 @@ const parsePDFTool = createTool({
                                 },
                                 {
                                     type:"text",
-                                    text:`Extract the data from the document and return the structured oputput as follows:
+                                    text:`
+                                        Ensure that the document is an invoice, receipt, or credit note or debit note. If document is something else like a  vat certificate or tax clearance or any other type of pdf document then terminate the process immediately and return an error message that the document is invalid.
+                                        Structure the error response like so
+                                         {
+                                        message: "Error invalid document and then mention the document type receieved"
+                                        status:400
+                                        docId: ${docId}
+                                        }
+                                        If the document is valid then go on to Extract the data from the valid document and return the structured oputput as follows:
                                     {
                                     "seller":{
                                             "name":"Seller Name",
@@ -88,6 +100,35 @@ const parsePDFTool = createTool({
                     ]
                 }
             })  
+  const textBlock = result?.content.find((block) => block.type === "text");
+
+      if (textBlock && "text" in textBlock) {
+        const rawText = textBlock.text;
+        const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+
+        if (jsonMatch) {
+         
+            const data = JSON.parse(jsonMatch[0]);
+
+            console.log("data", data)
+            const { status, docId } = data;
+
+            if(status ===400){
+            await network.state.kv.set("wrong-doc-type", true);
+
+         const cleanUp=await convex.mutation(api.docs.deleteDocRecord,{
+            id:docId as Id<"docs">
+
+        })
+          console.error("Invalid docment type.");
+
+        return {cleanUp}
+            }
+        
+        }
+            console.log("result", result)
+    }
+        
         } catch (error) {
             console.error(error);
             throw error;
@@ -99,8 +140,10 @@ const parsePDFTool = createTool({
 export const docScanningAgent = createAgent({
     name:"Doc Scanning Agent",
     description:
-    "Processes doc images and PDFs to extract key information such as vendo names, dates amounts, and, line items",
-    system:` You are an AI powered doc scanning assistant. Your primary role is to accurately extract and structure
+    "Processes documents, images and PDFs to extract key information such as buyer and customer names, dates, amounts, and, line items. Only extract this information from documents that are invoices, credit notes or debit notes. Dont do this for other documents ",
+    system:`
+    Ensure that the document is an invoice, receipt, or credit note or debit note. If document is something else like a  vat certificate or tax clearance or any other type of pdf document then terminate the process immediately and return an error message that the document is invalid.
+    You are an AI powered doc scanning assistant. Your primary role is to accurately extract and structure
     relevant information from scanned docs. Your task includes recognizing and parsing details such as:
     - Seller information: Seller name, seller TIN Number, seller VAT Number, seller address, contact number, contact email.
     - Buyer information: buyer name, buyer TIN Number, buyer VAT Number, buyer address, contact number, contact email.

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
     DndContext,useSensor,useSensors,PointerSensor
@@ -9,14 +9,40 @@ import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { useSchematicEntitlement } from '@schematichq/schematic-react';
 // import { uploadPDF } from '@/actions/uploadPDF';
-import { AlertCircle, CheckCircle, CloudUpload } from 'lucide-react';
+import { AlertCircle, CheckCircle, CloudUpload, FileWarning } from 'lucide-react';
 import { Button } from './ui/button';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 
 function PDFDropzone() {
 
     const [isDraggingOver, setIsDraggingOver]= useState(false);
     const [uploadFiles, setUploadFiles]= useState<string[]>([])
     const [isUploading, setIsUploading]= useState(false);
+    const [docId, setDocId] = useState<Id<"docs">|null>(null);
+    const [isDocValid, setIsDocValid]= useState(true)
+
+      // Fetch the doc details
+    const doc = useQuery(
+        api.docs.getDocById,
+        docId?{id:docId}: "skip",
+    )
+
+    console.log("doc", doc)
+    console.log("docId", docId)
+    console.log(isDocValid)
+    useEffect(()=>{
+if(doc===null && docId!==null){
+    setIsDocValid(false)
+     setTimeout(()=>(
+            setDocId(null),
+            setIsDocValid(true)
+        ),5000)
+}
+    
+    },[doc,docId])
+
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -27,13 +53,8 @@ function PDFDropzone() {
 
     const {value:isFeatureEnabled, featureUsageExceeded, featureAllocation} = useSchematicEntitlement("scans")
 
-console.log(isFeatureEnabled)
-console.log(featureUsageExceeded)
-console.log(featureAllocation)
 
 const handleUpload = useCallback (async(files:FileList| File[])=>{
-    console.log("files",files)
-    console.log("user",user)
     if(!user){
         alert("Please sign in to upload file")
 
@@ -68,20 +89,28 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
     body: formData,
     // credentials: "include", // Needed if you're using Clerk and want to pass session cookie
   });
-  console.log(result)
-        //  let result
-            // if( result &&!result.success){
-            //     throw new Error(result.error);
-            // }
-            newUploadedFiles.push(file.name)
+
+
+  newUploadedFiles.push(file.name)
+
+    const responseData = await result.json();
+    if (responseData.success && responseData.data?.docId) {
+     const id =responseData.data?.docId as Id<"docs">
+            setDocId(id)
+    }
+   
+
         }
         setUploadFiles((prev)=>[...prev, ...newUploadedFiles])
 
         setTimeout(()=>(
             setUploadFiles([])
-        ),2000)
+        ),5000)
 
+          
         router.push("/docs")
+
+
     } catch (error) {
         console.log("Upload failed", error);
         alert(`Upload of the document failed ${error instanceof Error ? error.message:"unknown error"}`)
@@ -90,6 +119,10 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
     }
 },[user,router])
 
+  //  Convert the URL string to a Convex Id
+ 
+console.log(uploadFiles.length)
+console.log(isDocValid)
     const handleDragLeave = useCallback((e:React.DragEvent)=>{
         e.preventDefault();
         setIsDraggingOver(false);
@@ -165,7 +198,7 @@ const triggerFileInput = useCallback(()=>{
                            className='hidden'
                            />
                            <Button
-                           className='mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed hover:cursor-pointer'
+                           className='hover:cursor-pointer mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed'
                            disabled={!isFeatureEnabled}
                            onClick={triggerFileInput}
                            >
@@ -192,7 +225,7 @@ const triggerFileInput = useCallback(()=>{
     )
 }
             </div>
-            {uploadFiles.length>0 && (
+            {(uploadFiles.length>0) && (
                 <div className='mt-4'>
                     <h3 className='font-medium'>Upload Files:</h3>
 
@@ -205,6 +238,23 @@ const triggerFileInput = useCallback(()=>{
                                 </li>
                             ))
                         }
+                       
+
+                    </ul>
+                </div>
+            )}
+              {(!isDocValid) && (
+                <div className='mt-4'>
+                    <h3 className='font-medium'>INVALID DOCUMENT</h3>
+
+                    <ul className='mt-2 text-sm text-gray-600 space-y-1'>
+                     
+                       
+                                   <li className='flex items-center'>
+                                    <FileWarning className='h-5 w-5 text-red-500 mr-2'/>
+                                   Please upload a valid Invoice, Credit Note or Debit Note. ONLY.
+                                </li>
+                       
 
                     </ul>
                 </div>

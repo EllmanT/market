@@ -1,7 +1,7 @@
 // import PDFDropzone from "@/components/PDFDropzone";
 import PDFDropzone from "@/components/PDFDropzone";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BarChart, Check, ScanText, Search, Shield, Upload } from "lucide-react";
+import { ArrowRight, BarChart, Check, Copyright, Mail, Phone, ScanText, Search, Upload, Workflow } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -22,7 +22,7 @@ export default function Home() {
 
       <div className="flex flex-wrap gap-4 justify-center">
         <Link href="/docs">
-          <Button className="px-6  text-base bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition transform duration-300 shadow-lg hover:shadow-blue-700/40">
+          <Button className="px-6 hover:cursor-pointer  text-base bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:scale-105 transition transform duration-300 shadow-lg hover:shadow-blue-700/40">
             Get Started <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
@@ -85,9 +85,9 @@ export default function Home() {
           <div className="p-4 rounded-full bg-purple-100 transition duration-300">
             <BarChart className="h-6 w-6 text-purple-600" />
           </div>
-          <h3 className="text-xl font-semibold">Smart Dashboards</h3>
+          <h3 className="text-xl font-semibold">Multiple Uploads</h3>
           <p className="text-gray-600 text-sm text-center">
-            Visualize trends, track metrics, and make smarter decisions with real-time insights.
+          Upload over 10 files at once! and let our AI do the rest.
           </p>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function Home() {
 
 
 
-     <section className="py-16 md:py-24 text-white">
+     <section className="py-8 md:py-12 text-white">
   <div className="container px-4 md:px-6 mx-auto">
     <div className="flex flex-col items-center justify-center space-y-4 text-center">
       <div className="space-y-2">
@@ -134,7 +134,7 @@ export default function Home() {
         </ul>
         <div className="mt-6">
           <Link href="/manage-plan">
-            <Button className="w-full hover:bg-gray-300 transition-colors hover:cursor-pointer" variant="outline">
+            <Button className="w-full hover:bg-gray-300 transition-colors hover:cursor-pointer text-black" variant="outline">
               Sign Up Free
             </Button>
           </Link>
@@ -171,7 +171,7 @@ export default function Home() {
         </ul>
         <div className="mt-6">
           <Link href="/manage-plan">
-            <Button className="w-full hover:bg-gray-400 hover:border-black transition-colors hover:cursor-pointer" variant="outline">
+            <Button className="w-full hover:bg-gray-400 hover:border-black transition-colors hover:cursor-pointer text-black" variant="outline">
               Choose Plan
             </Button>
           </Link>
@@ -258,23 +258,37 @@ export default function Home() {
 
 
       {/* Footer */}
-     <footer className="border-t border-gray-200 dark:border-gray-800">
-      <div className="container px-4 md:px-6 py-8 mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-1">
-            <Shield className="h-6 w-6 text-blue-600"/>
-            <span>Market 🔍</span>
-
-          </div>
-          <div className="mt-4 md:mt-0">
-            <p className="text-sm text-gray-500 dark:text-gray-400">THe smater way managing documents</p>
+<footer className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-black">
+      <div className="container mx-auto px-4 md:px-6 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          
+          {/* Logo and Brand */}
+          <div className="flex items-center space-x-2">
+            <Workflow className="h-5 w-5 text-blue-600" />
+            <span className="text-lg font-semibold text-gray-800 dark:text-white">Linkayi</span>
           </div>
 
+          {/* Contact and Info */}
+          <div className="text-center md:text-right text-sm space-y-1 md:space-y-0 md:space-x-6">
+            <p className="flex items-center justify-center md:justify-end gap-1 text-gray-600 dark:text-gray-400">
+              <Copyright className="w-4 h-4" /> 
+              <span>2025 Axis Solutions</span>
+            </p>
+            <p className="flex items-center justify-center md:justify-end gap-1 text-gray-600 dark:text-gray-400">
+              <Mail className="w-4 h-4" />
+              <a href="mailto:helpdesk@axissol.com" className="hover:underline">helpdesk@axissol.com</a>
+            </p>
+            <p className="flex items-center justify-center md:justify-end gap-1 text-gray-600 dark:text-gray-400">
+              <Phone className="w-4 h-4" />
+              <span>020 881 222 333</span>
+            </p>
+            <p className="italic text-xs text-gray-500 dark:text-gray-500 mt-2 md:mt-0">
+              📄 The smarter way to manage your documents
+            </p>
+          </div>
         </div>
-
       </div>
-
-     </footer>
+    </footer>
    </div>
   );
 }

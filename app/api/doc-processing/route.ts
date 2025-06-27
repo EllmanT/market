@@ -66,6 +66,12 @@ export async function POST(req: Request) {
 
     console.log("Inngest response:", newData);
 
+     if(!newData){
+      return NextResponse.json({success:false, 
+        error:"Inngest error"
+      },{status:500})
+    }
+
     return NextResponse.json({
       success: true,
       data: {

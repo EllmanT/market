@@ -92,6 +92,10 @@ const saveToDatabase = createTool({
             bankingDetails
         } = params;
 
+        console.log("params", params)
+        if(!params){
+            await context.network?.state.kv.set("wrong-doc-type", true);
+        }
         const result= await context.step?.run(
             "save-doc-to-database",
             async()=>{
