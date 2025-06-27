@@ -44,7 +44,7 @@ const parsePDFTool = createTool({
                                         status:400
                                         docId: ${docId}
                                         }
-                                        If the document is valid then go on to Extract the data from the valid document and return the structured oputput as follows:
+                                        If the document is valid then go on to Extract the data from the document and return the structured oputput as follows:
                                     {
                                     "seller":{
                                             "name":"Seller Name",
@@ -128,7 +128,7 @@ const parsePDFTool = createTool({
         }
             console.log("result", result)
     }
-        
+        return result;
         } catch (error) {
             console.error(error);
             throw error;

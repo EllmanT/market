@@ -1,7 +1,7 @@
 "use server"
 import { ZodError, ZodSchema } from "zod";
-import { UnauthorisedError, ValidationError } from "../http-errors";
-import { auth, Session } from "@clerk/nextjs/server";
+import {  ValidationError } from "../http-errors";
+import {  Session } from "@clerk/nextjs/server";
 
 
 
@@ -30,7 +30,7 @@ async function action<T>({
         }
     }
 
-    let session :Session | null = null;
+    const session :Session | null = null;
 
     if(authorize){
         // session = await auth()

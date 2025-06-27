@@ -1,6 +1,6 @@
 "use client"
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
-import { Shield, Workflow } from 'lucide-react'
+import { Workflow } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import { usePathname } from 'next/navigation'
