@@ -51,7 +51,7 @@ export default function Home() {
   <div className="container px-4 md:px-6 mx-auto">
     <div className="flex flex-col items-center justify-center space-y-4 text-center">
       <div className="space-y-3 max-w-2xl mx-auto" data-aos="fade-up">
-        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">⚙️ Powerful Features</h2>
+        <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight"><span className="animate-pulse">⚙️</span> Powerful Features</h2>
         <p className="text-gray-600 md:text-lg">
           Our AI-powered platform transforms how you manage documents and track critical information — faster, smarter, better.
         </p>
