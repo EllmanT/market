@@ -1,6 +1,7 @@
 // import PDFDropzone from "@/components/PDFDropzone";
 import PDFDropzone from "@/components/PDFDropzone";
 import { Button } from "@/components/ui/button";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { ArrowRight, BarChart, Check, Copyright, Mail, Phone, ScanText, Search, Upload, Workflow } from "lucide-react";
 import Link from "next/link";
 
@@ -133,11 +134,23 @@ export default function Home() {
           </li>
         </ul>
         <div className="mt-6">
-          <Link href="/manage-plan">
+         
+           <SignedIn>
+
+                <Link href="/docs">
+                          <Button className="w-full hover:bg-gray-300 transition-colors hover:cursor-pointer text-black" variant="outline">
+              Try now free
+            </Button>
+
+                </Link>
+                </SignedIn>
+                 <SignedOut>
+                <SignInButton mode="modal">
             <Button className="w-full hover:bg-gray-300 transition-colors hover:cursor-pointer text-black" variant="outline">
               Sign Up Free
             </Button>
-          </Link>
+                </SignInButton>
+            </SignedOut>
         </div>
       </div>
 
@@ -170,11 +183,22 @@ export default function Home() {
           </li>
         </ul>
         <div className="mt-6">
-          <Link href="/manage-plan">
+         
+           <SignedIn>
+
+                <Link href="/manage-plan">
             <Button className="w-full hover:bg-gray-400 hover:border-black transition-colors hover:cursor-pointer text-black" variant="outline">
               Choose Plan
             </Button>
-          </Link>
+                </Link>
+                </SignedIn>
+                 <SignedOut>
+                <SignInButton mode="modal">
+            <Button className="w-full hover:bg-gray-400 hover:border-black transition-colors hover:cursor-pointer text-black" variant="outline">
+              Choose Plan
+            </Button>
+                </SignInButton>
+            </SignedOut>
         </div>
       </div>
 
@@ -218,15 +242,30 @@ export default function Home() {
           </li>
         </ul>
         <div className="mt-6">
-          <Link href="/manage-plan">
-          <Button className=" hover:cursor-pointer w-full relative group overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md backdrop-blur-md border border-blue-400 transition-transform duration-300 transform hover:border-amber-300">
+
+
+           <SignedIn>
+
+                <Link href="/manage-plan">
+                       <Button className=" hover:cursor-pointer w-full relative group overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md backdrop-blur-md border border-blue-400 transition-transform duration-300 transform hover:border-amber-300">
   <span className="relative z-10 font-semibold tracking-wide">
     Upgrade Now
   </span>
   <span className="absolute inset-0 w-full h-full bg-blue-500 opacity-0 group-hover:opacity-10 transition duration-300 blur-xl rounded-xl"></span>
 </Button>
 
-          </Link>
+                </Link>
+                </SignedIn>
+                 <SignedOut>
+                <SignInButton mode="modal">
+          <Button className=" hover:cursor-pointer w-full relative group overflow-hidden rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-md backdrop-blur-md border border-blue-400 transition-transform duration-300 transform hover:border-amber-300">
+  <span className="relative z-10 font-semibold tracking-wide">
+    Upgrade Now
+  </span>
+  <span className="absolute inset-0 w-full h-full bg-blue-500 opacity-0 group-hover:opacity-10 transition duration-300 blur-xl rounded-xl"></span>
+</Button>
+                </SignInButton>
+            </SignedOut>
         </div>
       </div>
     </div>
@@ -246,9 +285,9 @@ export default function Home() {
         </p>
       </div>
       <div className="pt-4">
-        <Link href="/signup">
-          <Button className="px-8 py-3 bg-blue-600 hover:bg-blue-700 hover:cursor-pointer text-white text-lg rounded-xl shadow-lg transition duration-300">
-            Get Started Free
+        <Link href="">
+          <Button  className="px-8 py-3 bg-blue-600 hover:bg-blue-700 hover:cursor-pointer text-white text-lg rounded-xl shadow-lg transition duration-300">
+            Start today for Free!
           </Button>
         </Link>
       </div>
