@@ -15,7 +15,13 @@ type ActionResponse<T=null>={
     status?:number;
 }
 type ErrorResponse = ActionResponse<undefined> & { success: false };
+type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
 
+// Define response structure
+type DocProcessResponse = {
+  docId: string;
+  fileName: string;
+};
 
 interface Document{
     _id:string;

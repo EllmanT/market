@@ -78,7 +78,7 @@ export async function POST(req: Request) {
         docId,
         fileName: file.name,
       },
-    },{status:200});
+    });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json({

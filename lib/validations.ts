@@ -6,3 +6,16 @@ export const PaginatedSearchParamsSchema = z.object({
   filter: z.string().optional(),
   sort: z.string().optional(),
 });
+
+export const uploadDocumentSchema = z.object({
+ file: z.custom<File>((val) => {
+    if (!(val instanceof File)) return false;
+    const isPdf =
+      val.type.includes("pdf") ||
+      val.name.toLowerCase().endsWith(".pdf");
+    return isPdf;
+  }, {
+    message: "Only PDF files allowed",
+  }),
+
+});

@@ -12,10 +12,8 @@ import { useSchematicEntitlement } from '@schematichq/schematic-react';
 import { AlertCircle, CheckCircle, CloudUpload, FileWarning } from 'lucide-react';
 import { Button } from './ui/button';
 import { useQuery } from 'convex/react';
-// import { api } from '@/convex/_generated/api';
-import { Id } from '@/convex/_generated/dataModel';
 import { api } from '@/convex/_generated/api';
-import { backendapi } from '@/lib/api';
+import { Id } from '@/convex/_generated/dataModel';
 
 function PDFDropzone() {
 
@@ -79,16 +77,23 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
 
             formData.append("file", file);
 
-      const { success, data:responseData, error } = await backendapi.ai.processDocument(formData)
+            // Call the server action to handle the upload
+
+            // const result = await uploadPDF(formData);
+            const result =  await fetch("/api/doc-processing", {
+    method: "POST",
+    body: formData,
+    // credentials: "include", // Needed if you're using Clerk and want to pass session cookie
+  });
+
   newUploadedFiles.push(file.name)
 
-    if (success && responseData?.docId) {
-     const id =responseData?.docId as Id<"docs">
-     console.log("id", id)
+    const responseData = await result.json();
+    if (responseData.success && responseData.data?.docId) {
+     const id =responseData.data?.docId as Id<"docs">
             setDocId(id)
-    }else{
-        console.log(error)
     }
+   
 
         }
         setUploadFiles((prev)=>[...prev, ...newUploadedFiles])

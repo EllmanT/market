@@ -82,7 +82,7 @@ export const getDocs = query({
     .order("desc")
     .paginate(args.paginationOpts)
 
-    console.log("results ", results)
+    // console.log("results ", results)
         return results;
     }
 })
