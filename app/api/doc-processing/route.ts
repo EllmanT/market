@@ -5,6 +5,8 @@ import Events from "@/constants/constants";
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { getFileDownloadUrl } from "@/lib/get-file-download-url";
+import { uploadDocumentSchema } from "@/lib/validations";
+import { ValidationError } from "@/lib/http-errors";
 
 export async function POST(req: Request) {
   const { userId } =  await auth();
@@ -14,17 +16,21 @@ export async function POST(req: Request) {
   }
 
   try {
+   
     const formData = await req.formData();
     const file = formData.get("file") as File;
 
-    if (!file) {
-      return NextResponse.json({ success: false, error: "No file provided" }, { status: 400 });
+      const validatedData = uploadDocumentSchema.safeParse({  
+      file
+    });
+
+
+     if (!validatedData.success) {
+      throw new ValidationError(validatedData.error.flatten().fieldErrors);
     }
 
-    if (!file.type.includes("pdf") && !file.name.toLowerCase().endsWith(".pdf")) {
-      return NextResponse.json({ success: false, error: "Only PDF files allowed" }, { status: 400 });
-    }
-
+    console.log("we made it")
+  
     // Generate upload URL
     const uploadUrl = await convex.mutation(api.docs.generateUploadUrl, {});
     const arrayBuffer = await file.arrayBuffer();
@@ -63,8 +69,6 @@ export async function POST(req: Request) {
         docId,
       },
     });
-
-    console.log("Inngest response:", newData);
 
      if(!newData){
       return NextResponse.json({success:false, 
