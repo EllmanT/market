@@ -24,12 +24,9 @@ export async function POST(req: Request) {
       file
     });
 
-
      if (!validatedData.success) {
       throw new ValidationError(validatedData.error.flatten().fieldErrors);
     }
-
-    console.log("we made it")
   
     // Generate upload URL
     const uploadUrl = await convex.mutation(api.docs.generateUploadUrl, {});
