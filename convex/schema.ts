@@ -57,6 +57,8 @@ export default defineSchema({
       }),
     ),
 
+    // qr code details
+    hasQRCode:v.optional(v.string()),
     // Banking details
     bankingDetails:v.array(
       v.object({

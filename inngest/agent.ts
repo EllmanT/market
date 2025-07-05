@@ -6,8 +6,8 @@ import {
 import {createServer} from "@inngest/agent-kit/server"
 import { inngest } from "./client";
 import { databaseAgent } from "./agents/databaseAgent";
-import { docScanningAgent } from "./agents/docScanningAgent";
 import Events from "@/constants/constants";
+import { docScanningAgent } from "./agents/docScanningAgent";
 
 const agentNetwork = createNetwork({
 

@@ -15,6 +15,7 @@ const saveToDatabase = createTool({
             "THe readable display name of the doc to show in the UI. If the file name is not human readale use this to give a more readable name"
         ),
         docId: z.string().describe("The Id of the doc to update"),
+        hasQRCode:z.string(),
         sellerName:z.string(),
         sellerTIN:z.string(),
         sellerVAT:z.string(),
@@ -63,6 +64,7 @@ const saveToDatabase = createTool({
         const {
             fileDisplayName,
             docId,
+            hasQRCode,
             sellerName,
             sellerTIN,
             sellerVAT,
@@ -108,6 +110,7 @@ const saveToDatabase = createTool({
                         {
                             id: docId as Id<"docs">,
                             fileDisplayName,
+                            hasQRCode,
                             sellerName,
                             sellerTIN,
                             sellerVAT,
@@ -149,6 +152,7 @@ const saveToDatabase = createTool({
                         addedToDb:"Success",
                         docId,
                         fileDisplayName,
+                        hasQRCode,
                         sellerName,
                         sellerTIN,
                         sellerVAT,

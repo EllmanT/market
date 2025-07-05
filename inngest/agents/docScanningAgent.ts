@@ -44,8 +44,11 @@ const parsePDFTool = createTool({
                                         status:400
                                         docId: ${docId}
                                         }
-                                        If the document is valid then go on to Extract the data from the document and return the structured oputput as follows:
+                                        If the document is valid then go on to
+                                        1. Check to see if the document has a QR code on it. Note this as either "yes" or "no".
+                                        2. Extract the data from the document and return the structured oputput as follows:
                                     {
+                                    "hasQRCode": "yes / no",
                                     "seller":{
                                             "name":"Seller Name",
                                             "tin":"2000110011",
@@ -145,6 +148,7 @@ export const docScanningAgent = createAgent({
     Ensure that the document is an invoice, receipt, or credit note or debit note. If document is something else like a  vat certificate or tax clearance or any other type of pdf document then terminate the process immediately and return an error message that the document is invalid.
     You are an AI powered doc scanning assistant. Your primary role is to accurately extract and structure
     relevant information from scanned docs. Your task includes recognizing and parsing details such as:
+    - Check to see if the document has a QR code on it. Note this as either "yes" or "no".
     - Seller information: Seller name, seller TIN Number, seller VAT Number, seller address, contact number, contact email.
     - Buyer information: buyer name, buyer TIN Number, buyer VAT Number, buyer address, contact number, contact email.
     - Be able to distinguish the difference between the 2 the buyer and the seller information 

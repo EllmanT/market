@@ -55,6 +55,7 @@ export const storeDoc = mutation({
             transactionSubTotal:undefined,
             transactionTotalAmount:undefined,
             
+            hasQRCode:undefined,
 
             items:[],
 
@@ -212,6 +213,8 @@ export const updateDocWithExtractedData = mutation({
         id:v.id("docs"),
         fileDisplayName:v.string(),
 
+        hasQRCode:v.string(),
+
         sellerName:v.string(),
         sellerTIN:v.string(),
         sellerVAT:v.string(),
@@ -266,6 +269,7 @@ export const updateDocWithExtractedData = mutation({
         // Update the doc with the extracted data
         await ctx.db.patch(args.id,{
             fileDisplayName:args.fileDisplayName,
+            hasQRCode:args.hasQRCode,
             sellerName:args.sellerName,
             sellerTIN:args.sellerTIN,
             sellerVAT:args.sellerVAT,
