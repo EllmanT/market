@@ -364,6 +364,7 @@ const respon = await fetch(`https://market-7em4mqxpe-tapiwa-ellmans-projects.ver
 if (!respon.ok) throw new Error(`Failed to fetch QR code: ${respon.status}`);
 const arrayBuff = await respon.arrayBuffer();
 console.log("arrayBuff byte length:", arrayBuff.byteLength);
+console.log("respon", respon)
 
 const qrUint8Array = new Uint8Array(arrayBuff);
 
