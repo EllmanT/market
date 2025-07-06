@@ -5,6 +5,7 @@ import QRCode from 'qrcode';
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const text = searchParams.get('text');
+  console.log("text", text)
 
   if (!text) {
     return NextResponse.json({ error: 'Missing `text` parameter' }, { status: 400 });

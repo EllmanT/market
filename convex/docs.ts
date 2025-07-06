@@ -357,7 +357,7 @@ export const stampDoc = action({
     //   const qrBuffer = await generateQrBuffer(qrcodeUrl);
     //   console.log("qrbuffer", qrBuffer)
       
-const respon = await fetch(`http://localhost:3000/api/stamp-doc?text=${encodeURIComponent(qrcodeUrl)}`, {
+const respon = await fetch(`https://market-7em4mqxpe-tapiwa-ellmans-projects.vercel.app/api/stamp-doc?text=${encodeURIComponent(qrcodeUrl)}`, {
   method: "GET",
 });
      console.log(respon.status)
@@ -413,3 +413,5 @@ const qrImage = await pdfDoc.embedPng(qrUint8Array);
     }
   },
 });
+
+
