@@ -22,7 +22,8 @@ const agentNetwork = createNetwork({
     defaultRouter:({network})=>{
         const savedToDatabase = network.state.kv.get("save-to-database");
          const wrongDocType = network.state.kv.get("wrong-doc-type");
-         if(savedToDatabase !==undefined || wrongDocType){
+         const zimraUploadError = network.state.kv.get("zimra-upload-error");
+         if(savedToDatabase !==undefined || wrongDocType ||zimraUploadError){
             // Terminate the agent process if the data has been saved to the database
 
             return undefined;

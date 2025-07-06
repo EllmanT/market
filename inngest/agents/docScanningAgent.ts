@@ -113,7 +113,6 @@ const parsePDFTool = createTool({
          
             const data = JSON.parse(jsonMatch[0]);
 
-            console.log("data", data)
             const { status, docId } = data;
 
             if(status ===400){
@@ -129,7 +128,7 @@ const parsePDFTool = createTool({
             }
         
         }
-            console.log("result", result)
+            // console.log("result", result)
     }
         return result;
         } catch (error) {

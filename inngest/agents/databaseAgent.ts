@@ -1,5 +1,6 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { stampDoc } from "@/lib/actions/doc.action";
 import convex from "@/lib/convex-client";
 import { client } from "@/lib/schematic";
 import { createAgent, createTool, openai } from "@inngest/agent-kit";
@@ -15,7 +16,9 @@ const saveToDatabase = createTool({
             "THe readable display name of the doc to show in the UI. If the file name is not human readale use this to give a more readable name"
         ),
         docId: z.string().describe("The Id of the doc to update"),
+        pdfUrl:z.string(),
         hasQRCode:z.string(),
+        qrcodeUrl:z.string(),
         sellerName:z.string(),
         sellerTIN:z.string(),
         sellerVAT:z.string(),
@@ -64,7 +67,9 @@ const saveToDatabase = createTool({
         const {
             fileDisplayName,
             docId,
+            pdfUrl,
             hasQRCode,
+            
             sellerName,
             sellerTIN,
             sellerVAT,
@@ -94,16 +99,84 @@ const saveToDatabase = createTool({
             bankingDetails
         } = params;
 
-        console.log("params", params)
         if(!params){
             await context.network?.state.kv.set("wrong-doc-type", true);
         }
+
+        // Only try to submit the invoice that does not already have a qr code
+        if(hasQRCode==="no"){
+                    //start create the payload
+
+  const zimraPayload = {
+  "receiptType": mapDocTypeToReceiptType(docType),
+  "receiptCurrency": currency,
+  "invoiceNo": customerName + currency + docNumber,
+  "referenceNumber": "",
+  "invoiceAmount": transactionTotalAmount,
+  "invoiceTaxAmount": transactionTotalVat,
+  "receiptNotes": docType,
+
+  "receiptLinesTaxInclusive": true,
+  "moneyTypeCode": "Cash",
+  "receiptPrintForm": "Receipt48",
+
+  "buyerRegisterName": customerName,
+  "buyerTradeName": customerName,
+  "vatNumber": customerVAT || "",
+  "buyerTIN": customerTIN || "",
+  "buyerPhoneNo": customerContact || "",
+  "buyerEmail": customerEmail || "",
+  "buyerProvince": "",
+  "buyerStreet": customerAddress || "",
+  "buyerHouseNo": "",
+  "buyerCity": "",
+
+  "receiptLines": items.map((item, index) => ({
+    "receiptLineType": "Sale",
+    "receiptLineNo": index + 1,
+    "receiptLineHSCode": "",
+    "receiptLineName": item.name || "Item",
+    "receiptLinePrice": item.unitPrice,
+    "receiptLineQuantity": item.quantity,
+    "receiptLineTotal": item.totalPrice,
+    "taxCode": "A",
+    "taxPercent": 0.15,
+  })),
+};
+
         const result= await context.step?.run(
             "save-doc-to-database",
             async()=>{
-                // 
                 try {
+                    
+//     let qrcodeUrl = ""
+//     console.log(zimraPayload)
+//     const response = await fetch("http://140.82.25.196:10005/api/VirtualDevice/SubmitReceipt", {
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//     Accept: "*/*",
+//   },
+//   body: JSON.stringify(zimraPayload),
+// });
 
+// const zimraResult = await response.json();
+// qrcodeUrl = zimraResult?.QRCode;
+
+// console.log("ZIMRA Submit Result:", zimraResult);
+// console.log("qrcodeUrl", qrcodeUrl)
+    // context.network?.state.kv.set("qrcode-url", qrcodeUrl); 
+
+  //end 
+          
+   // if zimra is successful
+                try {
+console.log("ZIMRA Submit Result: 2");
+const qrcodeUrl="https://fdmstest.zimra.co.zw/Receipt/Result?DeviceId=0000021049&ReceiptDate=07%2F05%2F2025%2000%3A00%3A00&ReceiptGlobalNo=0000000448&ReceiptQrData=DAFA-B260-09EB-AB98"
+console.log("qrcodeUrl", qrcodeUrl)
+console.log("pdf-url", pdfUrl)
+console.log("docId", docId)
+                    
                     // Call the convex mutation to update the doc with the extracted data
                     const {userId} = await convex.mutation(
                         api.docs.updateDocWithExtractedData,
@@ -111,6 +184,7 @@ const saveToDatabase = createTool({
                             id: docId as Id<"docs">,
                             fileDisplayName,
                             hasQRCode,
+                            qrcodeUrl:qrcodeUrl,
                             sellerName,
                             sellerTIN,
                             sellerVAT,
@@ -148,6 +222,23 @@ const saveToDatabase = createTool({
                         }
                     });
 
+                    
+                    //Logic for stamping receipt
+                    
+                const result = await convex.action(api.docs.stampDoc, {
+  docId: docId as Id<"docs">,           // Id<"docs"> value here
+  qrcodeUrl: qrcodeUrl,   // string URL for QR code
+  fileUrl: pdfUrl, // string URL to download the PDF
+});
+
+
+if (result?.success) {
+  console.log("Stamped successfully!");
+} else {
+  console.error("Stamping failed:", result?.error);
+}
+
+
                     return {
                         addedToDb:"Success",
                         docId,
@@ -178,6 +269,128 @@ const saveToDatabase = createTool({
                         bankingDetails
 
                     }
+
+                } catch (error) {
+                    return{
+                        addedToDb:"Failed",
+                        error: error instanceof Error ? error.message: "Unknown error"
+                    }
+                }
+                 
+} catch (error) {
+
+    //if errors occurs while submitting to zimra catch them here
+    console.log("herer , failed to submit", error)
+
+                context?.network.state.kv.set("zimra-upload-error", true);
+
+}
+               
+
+            },
+
+            // stamp the document logic 
+            //Use the url to stamp the convex document 
+          
+        );
+        if(result?.addedToDb ==="Success"){
+            // Only set KV values if the operation was successful
+            context.network?.state.kv.set("save-to-database", true);
+            context.network?.state.kv.set("doc", docId); 
+        }else{
+            console.log("result")
+        }
+        return result;
+
+
+        } else{
+        //if the doc has a qr code just upload it
+        //end 
+        const result= await context.step?.run(
+            "save-doc-to-database",
+            async()=>{
+                // 
+                try {
+                    const qrcodeUrl="";
+                    // Call the convex mutation to update the doc with the extracted data
+                    const {userId} = await convex.mutation(
+                        api.docs.updateDocWithExtractedData,
+                        {
+                            id: docId as Id<"docs">,
+                            fileDisplayName,
+                            hasQRCode,
+                            qrcodeUrl,
+                            sellerName,
+                            sellerTIN,
+                            sellerVAT,
+                            sellerAddress,
+                            sellerContact,
+                            sellerEmail,
+                            customerName,
+                            customerTIN,
+                            customerVAT,
+                            customerAddress,
+                            customerContact,
+                            customerEmail,
+                            docType,
+                            currency,
+                            pricingType,
+                            docSummary,
+                            docNumber,
+                            transactionDate,
+                            transactionTotalVat,
+                            transactionSubTotal,
+                            transactionTotalAmount,
+                            items,
+                            bankingDetails
+                        }
+                    );
+
+                    // Track event in schematic
+                    await client.track({
+                        event:"scan",
+                        company:{
+                            id:userId,
+                        },
+                        user:{
+                            id:userId,
+                        }
+                    });
+
+               
+
+
+                    return {
+                        addedToDb:"Success",
+                        docId,
+                        fileDisplayName,
+                        hasQRCode,
+                        sellerName,
+                        sellerTIN,
+                        sellerVAT,
+                        sellerAddress,
+                        sellerContact,
+                        sellerEmail,
+                        customerName,
+                        customerTIN,
+                        customerVAT,
+                        customerAddress,
+                        customerContact,
+                        customerEmail,
+                        docType,
+                        currency,
+                        pricingType,
+                        docSummary,
+                        docNumber,
+                        transactionDate,
+                        transactionTotalVat,
+                        transactionSubTotal,
+                        transactionTotalAmount,
+                        items,
+                        bankingDetails
+
+                    }
+
                 } catch (error) {
                     return{
                         addedToDb:"Failed",
@@ -191,10 +404,10 @@ const saveToDatabase = createTool({
             context.network?.state.kv.set("save-to-database", true);
             context.network?.state.kv.set("doc", docId); 
         }else{
-            console.log("result", result)
+            console.log("result")
         }
         return result;
-    
+        }
     }
 })
 
@@ -210,3 +423,11 @@ export const databaseAgent = createAgent({
     }),
     tools: [saveToDatabase]
 })
+
+function mapDocTypeToReceiptType(docType: string): "FiscalInvoice" | "CreditNote" | "DebitNote" {
+  const normalized = docType.toLowerCase();
+
+  if (normalized.includes("credit")) return "CreditNote";
+  if (normalized.includes("debit")) return "DebitNote";
+  return "FiscalInvoice"; // fallback for anything like "fiscal tax invoice"
+}

@@ -123,7 +123,7 @@ const handleDrop = useCallback((e:React.DragEvent)=>{
     e.preventDefault();
     setIsDraggingOver(false);
     console.log("Dropped")
-
+console.log("user", user)
     if(!user){
         alert("Please sign in to upload file")
 
