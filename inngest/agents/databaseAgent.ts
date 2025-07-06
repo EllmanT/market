@@ -236,33 +236,15 @@ console.log("docId", docId)
   }),
 });
 
-console.log("result", result)
 if (!response.ok) {
   const error = await response.json();
   throw new Error(error.error || 'Failed to stamp PDF');
 }
 
-// const blob = await response.blob();
-// const stampedPdfUrl = URL.createObjectURL(blob);
 
-// Optional: Open the file, download it, or upload to storage
-// window.open(stampedPdfUrl); // or use it however you need
-
-                    
-//                 const result = await convex.action(api.docs.stampDoc, {
-//   docId: docId as Id<"docs">,           // Id<"docs"> value here
-//   qrcodeUrl: qrcodeUrl,   // string URL for QR code
-//   fileUrl: pdfUrl, // string URL to download the PDF
-// });
-
-
-// if (result?.success) {
-//   console.log("Stamped successfully!");
-// } else {
-//   console.error("Stamping failed:", result?.error);
-// }
-
-
+ context.network?.state.kv.set("stamp-document", true);
+ context.network?.state.kv.set("save-to-database", true);
+            context.network?.state.kv.set("doc", docId); 
                     return {
                         addedToDb:"Success",
                         docId,
@@ -294,6 +276,7 @@ if (!response.ok) {
 
                     }
 
+                    
                 } catch (error) {
                     return{
                         addedToDb:"Failed",
