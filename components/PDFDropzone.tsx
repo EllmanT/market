@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { useSchematicEntitlement } from '@schematichq/schematic-react';
 // import { uploadPDF } from '@/actions/uploadPDF';
-import { AlertCircle, CheckCircle, CloudUpload, FileWarning } from 'lucide-react';
+import { AlertCircle,  CloudUpload, FileWarning } from 'lucide-react';
 import { Button } from './ui/button';
 import { useQuery } from 'convex/react';
 // import { api } from '@/convex/_generated/api';
