@@ -10,7 +10,8 @@ const parsePDFTool = createTool({
     description:"Analyse the given PDF",
     parameters:z.object({
         pdfUrl:z.string(),
-        docId:z.string()
+        docId:z.string(),
+        fileId:z.string(),
     }),
 
     handler: async ({pdfUrl, docId}, {step, network})=>{

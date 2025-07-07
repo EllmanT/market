@@ -7,6 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getFileDownloadUrl } from "@/lib/get-file-download-url";
 import { uploadDocumentSchema } from "@/lib/validations";
 import { ValidationError } from "@/lib/http-errors";
+import { Id } from "@/convex/_generated/dataModel";
 
 export async function POST(req: Request) {
   const { userId } =  await auth();
@@ -58,12 +59,14 @@ export async function POST(req: Request) {
 
     const fileUrl = await getFileDownloadUrl(storageId);
 
+    console.log("og storage id ", storageId)
     // Trigger Inngest event
     const newData = await inngest.send({
       name: Events.EXTRACT_DATA_AND_SAVE_TO_DB,
       data: {
         url: fileUrl.downloadUrl,
         docId,
+        fileId:storageId as Id<"_storage">
       },
     });
 

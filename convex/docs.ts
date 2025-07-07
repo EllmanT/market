@@ -1,11 +1,7 @@
 import { v } from "convex/values"
-import { action, mutation, query} from "./_generated/server"
+import {  mutation, query} from "./_generated/server"
 import { paginationOptsValidator } from "convex/server";
 import { Id } from "./_generated/dataModel";
-import { PDFDocument } from "pdf-lib";
-import QRCode from "qrcode";
-import {generateQrBuffer} from "../lib/generateQRBuffer"
-
 
 
 export const generateUploadUrl = mutation({
@@ -118,6 +114,28 @@ export const deleteDocRecord= mutation({
         }
     }
 })
+
+// Deleting the old document file
+
+export const deleteOldDocument= mutation({
+    args:{
+        id:v.id("_storage")
+    },
+    handler: async(ctx, args)=>{
+         
+        console.log("id", args.id)
+      
+          //Delelte the file from the storage
+
+          await ctx.storage.delete(args.id);
+
+        
+        return {
+            message:"Old doc deleted"
+        }
+    }
+})
+
 // Get doc by id
 
 export const getDocById = query({
@@ -334,85 +352,5 @@ export const updateDocFileId = mutation({
 
 
 
-export const stampDoc = action({
-  args: {
-    docId: v.id("docs"),
-    qrcodeUrl: v.string(),
-    fileUrl: v.string(),
-  },
-  handler: async (ctx, { docId, qrcodeUrl, fileUrl }) => {
-    try {
-      console.log("📥 Fetching original PDF from:", fileUrl);
-      const response = await fetch(fileUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to download file: ${response.statusText}`);
-      }
-
-      const arrayBuffer = await response.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
-      const page = pdfDoc.getPages()[0];
-      const { width } = page.getSize();
-
-      console.log("🧠 Generating QR...");
-    //   const qrBuffer = await generateQrBuffer(qrcodeUrl);
-    //   console.log("qrbuffer", qrBuffer)
-      
-const respon = await fetch(`https://market-7em4mqxpe-tapiwa-ellmans-projects.vercel.app/api/stamp-doc?text=${encodeURIComponent(qrcodeUrl)}`, {
-  method: "GET",
-});
-     console.log(respon.status)
-if (!respon.ok) throw new Error(`Failed to fetch QR code: ${respon.status}`);
-const arrayBuff = await respon.arrayBuffer();
-console.log("arrayBuff byte length:", arrayBuff.byteLength);
-console.log("respon", respon)
-
-const qrUint8Array = new Uint8Array(arrayBuff);
-
-
-const qrImage = await pdfDoc.embedPng(qrUint8Array);
-    //   const qrImage = await pdfDoc.embedPng(qrBuffer);
-      const qrDims = qrImage.scale(1);
-
-      console.log("📄 Stamping QR onto PDF...");
-      page.drawImage(qrImage, {
-        x: width / 2 - qrDims.width / 2,
-        y: 30,
-        width: qrDims.width,
-        height: qrDims.height,
-      });
-
-      const modifiedPdfBytes = await pdfDoc.save();
-
-      console.log("📤 Uploading modified PDF...");
-      const uploadUrl = await ctx.storage.generateUploadUrl();
-      const uploadRes = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/pdf" },
-        body: modifiedPdfBytes,
-      });
-
-      if (!uploadRes.ok) {
-        throw new Error("Failed to upload stamped PDF");
-      }
-
-      const { storageId } = await uploadRes.json();
-
-      // If needed: update doc record here using internal mutation
-      // await ctx.runMutation(internal.docs.updateDocFileId, {
-      //   id: docId,
-      //   fileId: storageId,
-      // });
-
-      console.log("✅ Stamping complete. New fileId:", storageId);
-      return { success: true, fileId: storageId };
-    } catch (error) {
-      console.error("❌ Error in stampDoc:", error);
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : "An unknown error occurred",
-      };
-    }
-  },
-});
 
 

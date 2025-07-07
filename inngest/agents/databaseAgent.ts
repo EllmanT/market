@@ -1,6 +1,5 @@
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { stampDoc } from "@/lib/actions/doc.action";
 import convex from "@/lib/convex-client";
 import { client } from "@/lib/schematic";
 import { createAgent, createTool, openai } from "@inngest/agent-kit";
@@ -17,6 +16,7 @@ const saveToDatabase = createTool({
         ),
         docId: z.string().describe("The Id of the doc to update"),
         pdfUrl:z.string(),
+        fileId:z.string().describe("the storage id of the file"),
         hasQRCode:z.string(),
         qrcodeUrl:z.string(),
         sellerName:z.string(),
@@ -68,6 +68,7 @@ const saveToDatabase = createTool({
             fileDisplayName,
             docId,
             pdfUrl,
+            fileId,
             hasQRCode,
             
             sellerName,
@@ -148,31 +149,42 @@ const saveToDatabase = createTool({
             "save-doc-to-database",
             async()=>{
                 try {
-                    
-//     let qrcodeUrl = ""
-//     console.log(zimraPayload)
-//     const response = await fetch("http://140.82.25.196:10005/api/VirtualDevice/SubmitReceipt", {
-//   method: "POST",
-//   headers: {
-//     "Content-Type": "application/json",
-//     Accept: "*/*",
-//   },
-//   body: JSON.stringify(zimraPayload),
-// });
+                
+    let qrcodeUrl =""
+    console.log(zimraPayload)
+    const response = await fetch("http://140.82.25.196:10005/api/VirtualDevice/SubmitReceipt", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  },
+  body: JSON.stringify(zimraPayload),
+});
 
-// const zimraResult = await response.json();
-// qrcodeUrl = zimraResult?.QRCode;
+const zimraResult = await response.json();
+qrcodeUrl = zimraResult?.QRCode;
 
+
+if(!qrcodeUrl){
+     await context?.network.state.kv.set("zimra-upload-error", true);
+       const cleanUp=await convex.mutation(api.docs.deleteDocRecord,{
+            id:docId as Id<"docs">
+
+        })
+          console.log("⛔ Terminating agent");
+
+        return {cleanUp}
+   
+}
 // console.log("ZIMRA Submit Result:", zimraResult);
 // console.log("qrcodeUrl", qrcodeUrl)
-    // context.network?.state.kv.set("qrcode-url", qrcodeUrl); 
 
-  //end 
+  
           
    // if zimra is successful
                 try {
 console.log("ZIMRA Submit Result: 2");
-const qrcodeUrl="https://fdmstest.zimra.co.zw/Receipt/Result?DeviceId=0000021049&ReceiptDate=07%2F05%2F2025%2000%3A00%3A00&ReceiptGlobalNo=0000000448&ReceiptQrData=DAFA-B260-09EB-AB98"
+// const qrcodeUrl="https://fdmstest.zimra.co.zw/Receipt/Result?DeviceId=0000021049&ReceiptDate=07%2F05%2F2025%2000%3A00%3A00&ReceiptGlobalNo=0000000448&ReceiptQrData=DAFA-B260-09EB-AB98"
 console.log("qrcodeUrl", qrcodeUrl)
 console.log("pdf-url", pdfUrl)
 console.log("docId", docId)
@@ -222,7 +234,7 @@ console.log("docId", docId)
                         }
                     });
 
-                    
+                    console.log("storageId", fileId)
                     //Logic for stamping receipt
                     const response = await fetch('http://localhost:3000/api/stamp-doc', {
   method: 'POST',
@@ -232,7 +244,8 @@ console.log("docId", docId)
   body: JSON.stringify({
     docId,        // e.g. "abc123"
     qrcodeUrl,    // e.g. "https://example.com/qr.png"
-    fileUrl:pdfUrl,      // e.g. "https://storage.example.com/file.pdf"
+    fileUrl:pdfUrl,  
+    fileId    // e.g. "https://storage.example.com/file.pdf"
   }),
 });
 
@@ -306,6 +319,7 @@ if (!response.ok) {
             context.network?.state.kv.set("doc", docId); 
         }else{
             console.log("result")
+             context.network?.state.kv.set("save-to-database", false);
         }
         return result;
 

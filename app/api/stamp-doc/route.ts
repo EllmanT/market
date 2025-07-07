@@ -1,4 +1,5 @@
 import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
 import convex from '@/lib/convex-client';
 import { NextResponse } from 'next/server';
 import { PDFDocument } from 'pdf-lib';
@@ -12,9 +13,10 @@ async function generateQrCodePng(text: string): Promise<Uint8Array> {
 
 export async function POST(req: Request) {
   try {
-    const { docId, qrcodeUrl, fileUrl } = await req.json();
+    const { docId, qrcodeUrl, fileUrl, fileId} = await req.json();
 
-    if (!docId || !qrcodeUrl || !fileUrl) {
+    console.log("storage Id final ", fileId)
+    if (!docId || !qrcodeUrl || !fileUrl||!fileId) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
@@ -33,7 +35,7 @@ export async function POST(req: Request) {
     const qrUint8Array = await generateQrCodePng(qrcodeUrl);
 
     const qrImage = await pdfDoc.embedPng(qrUint8Array);
-    const qrDims = qrImage.scale(1);
+    const qrDims = qrImage.scale(0.5);
 
     console.log("📄 Stamping QR onto PDF...");
     page.drawImage(qrImage, {
@@ -63,6 +65,15 @@ export async function POST(req: Request) {
       throw new Error(`Failed to upload file: ${uploadResponse.statusText}`);
     }
 
+    //Deleting the old document
+      const cleanUp=await convex.mutation(api.docs.deleteOldDocument,{
+            id:fileId as Id<"_storage">
+        })
+
+        if(!cleanUp){
+                throw new Error(`Failed to delete old doc`);
+
+        }
     const { storageId } = await uploadResponse.json();
 
     // Update the doc record in Convex database

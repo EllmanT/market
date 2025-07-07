@@ -89,7 +89,7 @@ function DocList() {
                                 <FileText className='h-5 w-5 text-red-500'/>
                             </TableCell>
                                 <TableCell className='font-medium'>
-                                    {doc.fileDisplayName || doc.fileName}
+                                    {doc.docNumber ? doc.docNumber : doc.fileName}
                                 </TableCell>
                                 <TableCell>
 {new Date(doc.uploadedAt).toLocaleDateString(undefined, {

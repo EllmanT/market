@@ -256,8 +256,13 @@ function Page() {
                                                 <a
                                                 href={downloadUrl}
                                                 target="_blank"
+                                                download={`${
+                                                doc.qrcodeUrl
+                                                    ? `Fiscalised-${doc.docNumber ?? doc.fileName}`
+                                                    : doc.docNumber ?? doc.fileName
+                                                }.pdf`} 
                                                 rel="noopener noreferrer"
-                                                className="mt-4 px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 inline-block"
+                                               className="mt-4 px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 inline-block"
                                                 >
                                                     View PDF
                                                 </a>

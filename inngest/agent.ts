@@ -26,7 +26,7 @@ const agentNetwork = createNetwork({
          const stampDocument =network.state.kv.get("stamp-document");
          if(savedToDatabase !==undefined || wrongDocType ||zimraUploadError|| stampDocument){
             // Terminate the agent process if the data has been saved to the database
-
+  console.log("⛔ Terminating agent here");
             return undefined;
         }
 
@@ -48,12 +48,12 @@ export const extractAndSavePDF = inngest.createFunction(
         const result = await agentNetwork.run(
             `
             Ensure that the document is an invoice, receipt, or credit note or debit note. If document is something else like a  vat certificate or tax clearance or any other type of document then terminate the process immediately and return an error message that the document is invalid.
-            Extract the key data from this pdf: ${event.data.url}. also send the docId ${event.data.docId}, Once the data is extracted , save it to the database using the docId: ${event.data.docId}.
-             Once the document is successflly saved to the database you can terminate the agent process or if the stamp-document context variable is no longer undefined..  
+            Extract the key data from this pdf: ${event.data.url}. also send the docId ${event.data.docId} and the fileId ${event.data.fileId}, Once the data is extracted , save it to the database using the docId: ${event.data.docId} and then delete the old document in the database in this location ${event.data.fileId}.
+             You can  terminate the agent process Once the document is successflly saved to the database or  if the process fails.
              
              `
         )
-
+    
         
         return result.state.kv.get("doc")
     }
