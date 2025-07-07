@@ -238,7 +238,7 @@ const triggerFileInput = useCallback(()=>{
                                    <li className='flex items-center'>
                                     <FileWarning className='h-5 w-5 text-red-500 mr-2'/>
                                    Please upload a valid Invoice, Credit Note or Debit Note. ONLY.
-                                   Fiscalisation error
+                                   Fiscalisation error.
                                 </li>
                        
 
