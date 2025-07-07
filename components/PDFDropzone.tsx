@@ -16,6 +16,7 @@ import { useQuery } from 'convex/react';
 import { Id } from '@/convex/_generated/dataModel';
 import { api } from '@/convex/_generated/api';
 import { backendapi } from '@/lib/api';
+import ProcessingItem from './Progress';
 
 function PDFDropzone() {
 
@@ -95,7 +96,7 @@ const handleUpload = useCallback (async(files:FileList| File[])=>{
 
         setTimeout(()=>(
             setUploadFiles([])
-        ),5000)
+        ),30000)
 
           
         router.push("/docs")
@@ -214,15 +215,12 @@ const triggerFileInput = useCallback(()=>{
             </div>
             {(uploadFiles.length>0) && (
                 <div className='mt-4'>
-                    <h3 className='font-medium'>Upload Files:</h3>
+                    <h3 className='font-medium'>Uploaded Files:</h3>
 
                     <ul className='mt-2 text-sm text-gray-600 space-y-1'>
                         {
                             uploadFiles.map((fileName,i)=>(
-                                <li key={i} className='flex items-center'>
-                                    <CheckCircle className='h-5 w-5 text-green-500 mr-2'/>
-                                    {fileName}
-                                </li>
+                              <ProcessingItem fileName={fileName} key={i}/>
                             ))
                         }
                        

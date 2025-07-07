@@ -63,7 +63,11 @@ const parsePDFTool = createTool({
                                             "name":"Customer Name",
                                             "tin":"2000110011",
                                             "vat":"220123123",
-                                            "address": "123 Main str City Country",
+                                            "address": "7 RAMON ROAD GRANITESIDE,HARARE",
+                                            "houseNo":"7",
+                                            "street":"RAMON ROAD GRANITESIDE",
+                                            "city":"HARARE",
+                                            "province":"HARARE"
                                             "contact": "0778113122"
                                             "email": "buyer@gmail.com"
                                         },
@@ -75,6 +79,7 @@ const parsePDFTool = createTool({
                                         },
                                     "items":[
                                             {
+                                        "hscode":"9 digit product code",
                                         "name":"Item 1",
                                         "quantity":2,
                                         "unit_price":10.00,

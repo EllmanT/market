@@ -30,6 +30,10 @@ const saveToDatabase = createTool({
         customerTIN:z.string(),
         customerVAT:z.string(),
         customerAddress:z.string(),
+        customerHouseNo:z.string(),
+        customerStreet:z.string(),
+        customerCity:z.string(),
+        customerProvince:z.string(),
         customerContact:z.string(),
         customerEmail:z.string(),
 
@@ -45,6 +49,7 @@ const saveToDatabase = createTool({
         
         items:z.array(
             z.object({
+                hscode:z.string(),
                 name:z.string(),
                 quantity:z.number(),
                 unitPrice:z.number(),
@@ -82,6 +87,10 @@ const saveToDatabase = createTool({
             customerTIN,
             customerVAT,
             customerAddress,
+            customerHouseNo,
+            customerCity,
+            customerStreet,
+            customerProvince,
             customerContact,
             customerEmail,
 
@@ -117,7 +126,7 @@ const saveToDatabase = createTool({
   "invoiceTaxAmount": transactionTotalVat,
   "receiptNotes": docType,
 
-  "receiptLinesTaxInclusive": true,
+  "receiptLinesTaxInclusive": pricingType==="tax_inclusive"?true:false,
   "moneyTypeCode": "Cash",
   "receiptPrintForm": "Receipt48",
 
@@ -127,23 +136,26 @@ const saveToDatabase = createTool({
   "buyerTIN": customerTIN || "",
   "buyerPhoneNo": customerContact || "",
   "buyerEmail": customerEmail || "",
-  "buyerProvince": "",
-  "buyerStreet": customerAddress || "",
-  "buyerHouseNo": "",
-  "buyerCity": "",
+  "buyerProvince": customerProvince || "",
+  "buyerStreet": customerStreet || "",
+  "buyerHouseNo": customerHouseNo || "",
+  "buyerCity": customerCity|| "",
 
   "receiptLines": items.map((item, index) => ({
     "receiptLineType": "Sale",
     "receiptLineNo": index + 1,
-    "receiptLineHSCode": "",
+    "receiptLineHSCode": item.hscode||"",
     "receiptLineName": item.name || "Item",
     "receiptLinePrice": item.unitPrice,
     "receiptLineQuantity": item.quantity,
     "receiptLineTotal": item.totalPrice,
-    "taxCode": "A",
-    "taxPercent": 0.15,
+   "taxCode":item.vatAmount === 0 ? "B" : "A",
+
+    "taxPercent": item.vatAmount === 0 ? 0.00 : 0.15,
   })),
 };
+
+console.log("Zimra payload ", zimraPayload)
 
         const result= await context.step?.run(
             "save-doc-to-database",
@@ -176,8 +188,8 @@ if(!qrcodeUrl){
         return 
    
 }
-// console.log("ZIMRA Submit Result:", zimraResult);
-// console.log("qrcodeUrl", qrcodeUrl)
+console.log("ZIMRA Submit Result:", zimraResult);
+console.log("qrcodeUrl", qrcodeUrl)
 
   
           

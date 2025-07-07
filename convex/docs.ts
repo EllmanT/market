@@ -269,6 +269,7 @@ export const updateDocWithExtractedData = mutation({
         
         items:v.array(
             v.object({
+                hscode:v.string(),
                 name:v.string(),
                 quantity:v.number(),
                 unitPrice:v.number(),

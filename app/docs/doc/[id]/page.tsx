@@ -365,7 +365,7 @@ function Page() {
                                                         </div>
                                                         
                                                     )}
-                                                  {/* {doc.currency&&(
+                                                  {doc.currency&&(
                                                         <div className="flex space-x-20">
                                                     <div className="flex space-x-5">
                                                     <p className=" text-gray-500">Pricing</p>
@@ -374,7 +374,7 @@ function Page() {
                                                    
                                                         </div>
                                                         
-                                                    )} */}
+                                                    )}
                                                     </div>
                                                 </div>
 

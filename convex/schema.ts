@@ -49,6 +49,7 @@ export default defineSchema({
     // Line items
     items:v.array(
       v.object({
+        hscode:v.optional(v.string()),
         name:v.string(),
         quantity:v.number(),
         unitPrice:v.number(),
