@@ -24,7 +24,7 @@ useEffect(() => {
   return (
     <li className='flex items-center  text-sm text-gray-700'>
       <CheckCircle className='h-5 w-5 text-green-500 mr-2' />
-      Processing {fileName}... <span className='ml-2 font-mono text-green-900'>{progress}%</span>
+      Processing {fileName}.... <span className='ml-2 font-mono text-green-900'>{progress}%</span>
     </li>
   );
 }
