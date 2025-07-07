@@ -171,9 +171,9 @@ if(!qrcodeUrl){
             id:docId as Id<"docs">
 
         })
-          console.log("⛔ Terminating agent");
+          console.log("⛔ Terminating agent", cleanUp);
 
-        return {cleanUp}
+        return 
    
 }
 // console.log("ZIMRA Submit Result:", zimraResult);
