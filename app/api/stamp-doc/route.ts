@@ -93,8 +93,8 @@ export async function POST(req: Request) {
     //     "Content-Disposition": `attachment; filename="stamped-${docId}.pdf"`,
     //   },
     // });
-  } catch (error: any) {
+  } catch (error) {
     console.error("❌ Error in stamp-pdf:", error);
-    return NextResponse.json({ error: error?.message || "Unknown error" }, { status: 500 });
+    return NextResponse.json({ error: error|| "Unknown error" }, { status: 500 });
   }
 }
