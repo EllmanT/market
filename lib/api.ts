@@ -13,7 +13,21 @@ export const backendapi = {
         method: "POST",
         formData,
       }),
+
+    //   stampDocument:(
+    //     params: {
+    //   docId: string;
+    //   qrcodeUrl: string;
+    //   fileUrl: string;
+    //   fileId: string;
+    // }
+    //   ):APIResponse<DocProcessResponse>=>
+    //     fetchHandler(`${API_BASE_URL}/stamp-doc`,{
+    //       method:"POST",
+    //        body: JSON.stringify(params),
+    //     })
   },
+
   
   
 };

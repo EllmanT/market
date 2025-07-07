@@ -247,8 +247,11 @@ console.log("docId", docId)
                     });
 
                     console.log("storageId", fileId)
+                    const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
+
                     //Logic for stamping receipt
-                    const response = await fetch('http://localhost:3000/api/stamp-doc', {
+                    const response = await fetch(`${API_BASE_URL}/stamp-doc`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -263,7 +266,16 @@ console.log("docId", docId)
 
 if (!response.ok) {
   const error = await response.json();
-  throw new Error(error.error || 'Failed to stamp PDF');
+       const cleanUp=await convex.mutation(api.docs.deleteDocRecord,{
+            id:docId as Id<"docs">
+
+        })
+        console.log("error",error);
+          console.log("⛔ Terminating agent", cleanUp);
+
+        return 
+ 
+  
 }
 
 
