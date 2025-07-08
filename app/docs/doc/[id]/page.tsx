@@ -7,7 +7,7 @@ import { deleteDoc } from "@/lib/actions/doc.action";
 import { getFileDownloadUrl } from "@/lib/get-file-download-url";
 import { useSchematicFlag } from "@schematichq/schematic-react";
 import { useQuery } from "convex/react";
-import {BanknoteArrowUpIcon,  ChevronLeft, FileText, Lightbulb, Lock, Sparkles } from "lucide-react";
+import {BanknoteArrowUpIcon,  ChevronLeft, FileText, Lightbulb, Lock, QrCode, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation"
 import { useEffect, useState } from "react";
@@ -169,21 +169,32 @@ function Page() {
                         <h1 className="text-2xl font-bold text-gray-900 truncate">
                             {doc.fileDisplayName || doc.fileName}</h1>
 
-                            <div className="flex items-center">
-                                {doc.status ==="pending" ?(
-                                    <div className="mr-2">
-                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-800"></div>
-                                    </div>
-                                ):null}
-                                <span
-                                className={`px-3 py-1 rounded-full text-sm ${
-                                    doc.status ==="pending"? "bg-yellow-100 text-yellow-800": doc.status ==="processed"?"bg-green-100 text-green-800":"bg-red-100 text-red-800" 
-                                }`}
-                                >
-                                        {doc.status.charAt(0).toUpperCase()+ doc.status.slice(1)}
-                                </span>
+                           
+  {/* Magic button with badge */}
+  <div className="relative">
+    <button
+      title="Magic Action"
+    >
+         <span
+    className={`px-2 py-1 rounded-full text-xs ${
+      doc.status === "pending"
+        ? "bg-yellow-100 text-yellow-800"
+        : doc.status === "processed"
+        ? "bg-green-100 text-green-800"
+        : "bg-red-100 text-red-800"
+    }`}
+  >
+    {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+  </span>
+    </button>
 
-                            </div>
+    {/* Badge shown only if QRCode URL is present */}
+    {doc.qrcodeUrl && (
+      <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full text-white text-[10px]">
+        <QrCode className='text-green-900'/>
+      </span>
+    )}
+  </div>
 
                     </div>
 
