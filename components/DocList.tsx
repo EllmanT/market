@@ -6,7 +6,7 @@ import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Doc } from '@/convex/_generated/dataModel';
 import { useRouter } from 'next/navigation';
-import { ChevronRight, FileText, QrCode, Sparkles, Stamp } from 'lucide-react';
+import { ChevronRight, FileText, QrCode } from 'lucide-react';
 import { Button } from './ui/button';
 
 
