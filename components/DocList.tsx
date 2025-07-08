@@ -6,7 +6,7 @@ import React from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { Doc } from '@/convex/_generated/dataModel';
 import { useRouter } from 'next/navigation';
-import { ChevronRight, FileText } from 'lucide-react';
+import { ChevronRight, FileText, QrCode, Sparkles, Stamp } from 'lucide-react';
 import { Button } from './ui/button';
 
 
@@ -101,14 +101,36 @@ function DocList() {
                                 <TableCell>
                                     {doc.transactionTotalAmount ? `${doc.transactionTotalAmount} ${doc.currency ||""}`:"-"}
                                 </TableCell>
-                                <TableCell>
-                                    <span className={`px-2 py-1 rounded-full text-xs ${
-                                        doc.status ==="pending"
-                                        ?"bg-yellow-100 text-yello-800": doc.status ==="processed"? "bg-green-100 text-green-800":"bg-red-100 text-red-800"
-                                    }`}>
-                                            {doc.status.charAt(0).toUpperCase()+ doc.status.slice(1)}
-                                    </span>
-                                </TableCell>
+                               <TableCell className="flex items-center gap-3">
+  {/* Status badge (as in your code) */}
+ 
+
+  {/* Magic button with badge */}
+  <div className="relative">
+    <button
+      title="Magic Action"
+    >
+         <span
+    className={`px-2 py-1 rounded-full text-xs ${
+      doc.status === "pending"
+        ? "bg-yellow-100 text-yellow-800"
+        : doc.status === "processed"
+        ? "bg-green-100 text-green-800"
+        : "bg-red-100 text-red-800"
+    }`}
+  >
+    {doc.status.charAt(0).toUpperCase() + doc.status.slice(1)}
+  </span>
+    </button>
+
+    {/* Badge shown only if QRCode URL is present */}
+    {doc.qrcodeUrl && (
+      <span className="absolute -top-1 -right-1 flex h-3 w-3 items-center justify-center rounded-full text-white text-[10px]">
+        <QrCode className='text-green-900'/>
+      </span>
+    )}
+  </div>
+</TableCell>
                                 <TableCell className='text-right'>
                                     <ChevronRight className='h-5 w-5 text-gray-400 ml-auto'/>
                                 </TableCell>
